@@ -81,7 +81,6 @@ const optionsContainer = document.querySelector(".answers");
 const scoreContainer = document.querySelector(".score");
 const nextBtn = document.querySelector(".next-btn");
 
-// State
 let subject = "";
 let score = 0;
 let index = 0;
@@ -98,7 +97,6 @@ const getSubjects = () => {
     .join("");
   subjectsList.innerHTML = subjects;
 
-  // Add click event listeners to subjects
   const subjectItems = document.querySelectorAll(".subject");
   subjectItems.forEach((item) => {
     item.addEventListener("click", (e) => {
@@ -108,7 +106,7 @@ const getSubjects = () => {
       questionsContainer.classList.add("show");
       getQuestions();
 
-      // Show relevant 3D model
+      // Load 3D model
       if (selectedSubject.includes("power train")) {
         modelContainer.style.display = "block";
         modelContainer.innerHTML = `
@@ -147,7 +145,7 @@ const getSubjects = () => {
   });
 };
 
-// Load and render question
+// Load and render current question
 const getQuestions = () => {
   scoreContainer.innerHTML = `<strong>Score:</strong> ${score}/5`;
 
@@ -164,6 +162,32 @@ const getQuestions = () => {
   document.querySelectorAll(".answer").forEach((answer) => {
     answer.addEventListener("click", (e) => handleClick(e, correctOption));
   });
+};
+
+// Handle user answer
+const handleClick = (e, correctOption) => {
+  if (!acceptingAnswers) return;
+  acceptingAnswers = false;
+
+  nextBtn.classList.add("show");
+  const selected = e.currentTarget;
+
+  if (selected.textContent === correctOption) {
+    selected.classList.add("win");
+    score++;
+    scoreContainer.innerHTML = `<strong>Score:</strong> ${score}/5`;
+  } else {
+    selected.classList.add("lose");
+  }
+
+  document.querySelectorAll(".answer").forEach((answer) => {
+    answer.style.pointerEvents = "none";
+  });
+
+  const subjectData = quizData.find((data) => data.subject.toLowerCase() === subject);
+  if (index === subjectData.questions.length - 1) {
+    nextBtn.textContent = "Show Result";
+  }
 };
 
 getSubjects();
