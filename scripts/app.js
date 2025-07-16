@@ -83,6 +83,8 @@ const nextBtn = document.querySelector(".next-btn");
 const finalScore = document.querySelector(".final-score");
 const resultContainer = document.querySelector(".result-container");
 const result = document.querySelector(".result");
+const restartBtn = document.querySelector(".restart-btn");
+const quitBtns = document.querySelectorAll(".quit-btn");
 
 let subject = "";
 let score = 0;
@@ -108,7 +110,6 @@ const getSubjects = () => {
       questionsContainer.classList.add("show");
       getQuestions();
 
-      // Show relevant 3D model
       if (selectedSubject.includes("power train")) {
         modelContainer.style.display = "block";
         modelContainer.innerHTML = `
@@ -190,7 +191,6 @@ const handleClick = (e, correctOption) => {
   }
 };
 
-// ➕ Next question / result logic
 nextBtn.addEventListener("click", () => {
   index++;
   nextBtn.classList.remove("show");
@@ -198,14 +198,49 @@ nextBtn.addEventListener("click", () => {
 
   const subjectData = quizData.find((data) => data.subject.toLowerCase() === subject);
   if (index >= subjectData.questions.length) {
-    // Show final result
     questionsContainer.classList.remove("show");
     resultContainer.classList.add("show");
     finalScore.textContent = score;
+
+    // Style result as win or lose
+    if (score > 1) {
+      result.classList.add("win");
+    } else {
+      result.classList.add("lose");
+    }
+
     return;
   }
 
   getQuestions();
 });
+
+// Restart quiz
+restartBtn.addEventListener("click", () => {
+  score = 0;
+  index = 0;
+  acceptingAnswers = true;
+  resultContainer.classList.remove("show");
+  questionsContainer.classList.add("show");
+  nextBtn.textContent = "Next question";
+  result.classList.remove("win", "lose");
+  getQuestions();
+});
+
+// Quit to subject selection
+quitBtns.forEach((btn) =>
+  btn.addEventListener("click", () => {
+    score = 0;
+    index = 0;
+    acceptingAnswers = true;
+    questionsContainer.classList.remove("show");
+    resultContainer.classList.remove("show");
+    subjectsContainer.classList.add("show");
+    nextBtn.textContent = "Next question";
+    result.classList.remove("win", "lose");
+    modelContainer.style.display = "none";
+    modelContainer.innerHTML = "";
+  })
+);
 
 getSubjects();
