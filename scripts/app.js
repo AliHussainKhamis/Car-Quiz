@@ -80,13 +80,15 @@ const questionContainer = document.querySelector(".question");
 const optionsContainer = document.querySelector(".answers");
 const scoreContainer = document.querySelector(".score");
 const nextBtn = document.querySelector(".next-btn");
+const finalScore = document.querySelector(".final-score");
+const resultContainer = document.querySelector(".result-container");
+const result = document.querySelector(".result");
 
 let subject = "";
 let score = 0;
 let index = 0;
 let acceptingAnswers = true;
 
-// Populate subject buttons
 const getSubjects = () => {
   const subjects = quizData
     .map((data) => {
@@ -106,7 +108,7 @@ const getSubjects = () => {
       questionsContainer.classList.add("show");
       getQuestions();
 
-      // Load 3D model
+      // Show relevant 3D model
       if (selectedSubject.includes("power train")) {
         modelContainer.style.display = "block";
         modelContainer.innerHTML = `
@@ -145,7 +147,6 @@ const getSubjects = () => {
   });
 };
 
-// Load and render current question
 const getQuestions = () => {
   scoreContainer.innerHTML = `<strong>Score:</strong> ${score}/5`;
 
@@ -164,7 +165,6 @@ const getQuestions = () => {
   });
 };
 
-// Handle user answer
 const handleClick = (e, correctOption) => {
   if (!acceptingAnswers) return;
   acceptingAnswers = false;
@@ -189,5 +189,23 @@ const handleClick = (e, correctOption) => {
     nextBtn.textContent = "Show Result";
   }
 };
+
+// ➕ Next question / result logic
+nextBtn.addEventListener("click", () => {
+  index++;
+  nextBtn.classList.remove("show");
+  acceptingAnswers = true;
+
+  const subjectData = quizData.find((data) => data.subject.toLowerCase() === subject);
+  if (index >= subjectData.questions.length) {
+    // Show final result
+    questionsContainer.classList.remove("show");
+    resultContainer.classList.add("show");
+    finalScore.textContent = score;
+    return;
+  }
+
+  getQuestions();
+});
 
 getSubjects();
