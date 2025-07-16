@@ -1,3 +1,5 @@
+// Multiple Choice Question of various subjects
+
 const quizData = [
   {
     subject: " ⚙️ Power Train & Engine Technology",
@@ -21,7 +23,32 @@ const quizData = [
           "Cool the engine block",
         ],
         correctOption: "Convert combustion pressure to mechanical motion",
-      }
+      },
+      {
+        question: "What is the primary purpose of the flywheel in a car engine?",
+        options: [
+          "To pump fuel into the cylinders",
+          "To keep the crankshaft turning smoothly between power strokes",
+          "To open and close the engine valves",
+          "To increase engine compression",
+        ],
+        correctOption: "To keep the crankshaft turning smoothly between power strokes",
+      },
+      {
+        question: "Which part cools the engine by removing excess heat?",
+        options: ["Oil filter", "Alternator", "Radiator", "Crankshaft"],
+        correctOption: "Radiator",
+      },
+      {
+        question: "What is the camshaft responsible for?",
+        options: [
+          "Fuel compression",
+          "Oil circulation",
+          "Exhaust emission control",
+          "Valve timing and movement",
+        ],
+        correctOption: "Valve timing and movement",
+      },
     ],
   },
   {
@@ -41,11 +68,41 @@ const quizData = [
         question: "What component transmits torque from the transmission to the wheels?",
         options: ["Driveshaft", "Radiator", "Fuel injector", "Clutch plate"],
         correctOption: "Driveshaft",
-      }
+      },
+      {
+        question: "What does suspension in a vehicle primarily do?",
+        options: [
+          "Provide engine power",
+          "Increase fuel efficiency",
+          "Cool the brake system",
+          "Absorb road shocks and maintain tire contact",
+        ],
+        correctOption: "Absorb road shocks and maintain tire contact",
+      },
+      {
+        question: "What is Ackermann steering principle?",
+        options: [
+          "Principle of reverse steering",
+          "All wheels turn in opposite directions",
+          "Used in all-wheel-drive systems",
+          "Inner wheel turns more sharply than outer",
+        ],
+        correctOption: "Inner wheel turns more sharply than outer",
+      },
+      {
+        question: "What is the purpose of anti-roll bars (sway bars)?",
+        options: [
+          "Reduce braking distance",
+          "To provide extra weight to the vehicle",
+          "Reduce body roll during cornering",
+          "Improve suspension stiffness",
+        ],
+        correctOption: "Reduce body roll during cornering",
+      },
     ],
   },
   {
-    subject: "⏲ Control Systems & ADAS",
+    subject: "⏲ Control Sytems & ADAS",
     questions: [
       {
         question: "What does ADAS stand for?",
@@ -66,25 +123,57 @@ const quizData = [
           "Reduce brake pad wear",
         ],
         correctOption: "Prevent wheels from locking during braking",
-      }
+      },
+      {
+        question: "Which sensor is used in Adaptive Cruise Control (ACC)?",
+        options: ["Accelerometer", "Radar", "Temperature sensor", "LDR"],
+        correctOption: "Radar",
+      },
+      {
+        question: "What does TPMS stand for?",
+        options: [
+          "Tire Pressure Management Software",
+          "Tire Pressure Monitoring System",
+          "Traffic Pattern Monitoring System",
+          "Traction Power Management System",
+        ],
+        correctOption: "Tire Pressure Monitoring System",
+      },
+      {
+        question: "What is the main role of an ECU in a car?",
+        options: [
+          "To Process data from sensors and control actuators",
+          "To control the car's air conditioning system only",
+          "To reduce vehicle weight",
+          "To charge the battery",
+        ],
+        correctOption: "To Process data from sensors and control actuators",
+      },
     ],
-  }
+  },
 ];
 
-// DOM Elements
+// DOM elements
 const subjectsList = document.querySelector(".subjects");
 const subjectsContainer = document.querySelector(".subjects-container");
-const modelContainer = document.getElementById("modelContainer");
 const questionsContainer = document.querySelector(".questions-container");
 const questionContainer = document.querySelector(".question");
 const optionsContainer = document.querySelector(".answers");
-const scoreContainer = document.querySelector(".score");
 const nextBtn = document.querySelector(".next-btn");
+const scoreContainer = document.querySelector(".score");
 const finalScore = document.querySelector(".final-score");
 const resultContainer = document.querySelector(".result-container");
 const result = document.querySelector(".result");
 const restartBtn = document.querySelector(".restart-btn");
 const quitBtns = document.querySelectorAll(".quit-btn");
+
+const modelContainer = document.getElementById("modelContainer");
+
+// State variables
+let subject = "";
+let score = 0;
+let index = 0;
+let acceptingAnswers = true;
 
 // Audio
 const audio1 = new Audio("assets/error.wav");
@@ -92,57 +181,51 @@ const audio2 = new Audio("assets/win.wav");
 const audio3 = new Audio("assets/Correct.mp3");
 const audio4 = new Audio("assets/lose.mp3");
 
-// State
-let subject = "";
-let score = 0;
-let index = 0;
-let acceptingAnswers = true;
-
 const getSubjects = () => {
   const subjects = quizData
     .map((data) => {
-      return `<li class="subject" id="${data.subject.toLowerCase()}">
-                ${data.subject}
-              </li>`;
+      return `<li class="subject" id='${data.subject.toLowerCase()}'>
+              ${data.subject} <i class="fa-solid fa-chevron-right"></i>
+            </li>`;
     })
     .join("");
   subjectsList.innerHTML = subjects;
 
-  const subjectItems = document.querySelectorAll(".subject");
-  subjectItems.forEach((item) => {
-    item.addEventListener("click", (e) => {
-      const selectedSubject = e.currentTarget.id;
-      subject = selectedSubject;
+  const subjectContainers = document.querySelectorAll(".subject");
+  subjectContainers.forEach((container) => {
+    container.addEventListener("click", (e) => {
+      subject = e.currentTarget.id;
       subjectsContainer.classList.remove("show");
       questionsContainer.classList.add("show");
       getQuestions();
 
-      if (selectedSubject.includes("power train")) {
+      // Show 3D model based on selected subject
+      if (subject.includes("power train")) {
         modelContainer.style.display = "block";
         modelContainer.innerHTML = `
           <model-viewer 
             src="assets/car_engine.glb" 
-            alt="Car Engine"
+            alt="Car Engine" 
             auto-rotate 
             camera-controls 
             style="width: 100%; height: 100%;">
           </model-viewer>`;
-      } else if (selectedSubject.includes("vehicle dynamics")) {
+      } else if (subject.includes("vehicle dynamics")) {
         modelContainer.style.display = "block";
         modelContainer.innerHTML = `
           <model-viewer 
             src="assets/Car_suspension.glb" 
-            alt="Car Suspension"
+            alt="Car Suspension" 
             auto-rotate 
             camera-controls 
             style="width: 100%; height: 100%;">
           </model-viewer>`;
-      } else if (selectedSubject.includes("control systems")) {
+      } else if (subject.includes("control sytems") || subject.includes("control systems")) {
         modelContainer.style.display = "block";
         modelContainer.innerHTML = `
           <model-viewer 
             src="assets/Car.glb" 
-            alt="Car Model"
+            alt="Car Model" 
             auto-rotate 
             camera-controls 
             style="width: 100%; height: 100%;">
@@ -184,18 +267,13 @@ const handleClick = (e, correctOption) => {
     selected.classList.add("win");
     score++;
     scoreContainer.innerHTML = `<strong>Score:</strong> ${score}/5`;
-    audio3.play();
+    audio2.play();
   } else {
     selected.classList.add("lose");
     audio1.play();
   }
 
-  document.querySelectorAll(".answer").forEach((answer) => {
-    answer.style.pointerEvents = "none";
-  });
-
-  const subjectData = quizData.find((data) => data.subject.toLowerCase() === subject);
-  if (index === subjectData.questions.length - 1) {
+  if (index === 4) {
     nextBtn.textContent = "Show Result";
   }
 };
@@ -205,20 +283,18 @@ nextBtn.addEventListener("click", () => {
   nextBtn.classList.remove("show");
   acceptingAnswers = true;
 
-  const subjectData = quizData.find((data) => data.subject.toLowerCase() === subject);
-  if (index >= subjectData.questions.length) {
+  if (index > 4) {
     questionsContainer.classList.remove("show");
     resultContainer.classList.add("show");
     finalScore.textContent = score;
 
-    if (score > 1) {
+    if (score > 2) {
       result.classList.add("win");
-      audio2.play();
+      audio3.play();
     } else {
       result.classList.add("lose");
       audio4.play();
     }
-
     return;
   }
 
@@ -232,24 +308,22 @@ restartBtn.addEventListener("click", () => {
   resultContainer.classList.remove("show");
   questionsContainer.classList.add("show");
   nextBtn.textContent = "Next question";
-  result.classList.remove("win", "lose");
   getQuestions();
-  audio2.play(); // replay win tone for restart motivation
+  audio2.play();
 });
 
 quitBtns.forEach((btn) =>
   btn.addEventListener("click", () => {
+    resultContainer.classList.remove("show");
+    questionsContainer.classList.remove("show");
+    subjectsContainer.classList.add("show");
+    nextBtn.textContent = "Next question";
     score = 0;
     index = 0;
     acceptingAnswers = true;
-    questionsContainer.classList.remove("show");
-    resultContainer.classList.remove("show");
-    subjectsContainer.classList.add("show");
-    nextBtn.textContent = "Next question";
-    result.classList.remove("win", "lose");
     modelContainer.style.display = "none";
     modelContainer.innerHTML = "";
-    audio1.play(); // quit = lose sound
+    audio1.play();
   })
 );
 
