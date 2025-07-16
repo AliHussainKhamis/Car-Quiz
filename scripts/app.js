@@ -86,6 +86,13 @@ const result = document.querySelector(".result");
 const restartBtn = document.querySelector(".restart-btn");
 const quitBtns = document.querySelectorAll(".quit-btn");
 
+// Audio
+const audio1 = new Audio("assets/error.wav");
+const audio2 = new Audio("assets/win.wav");
+const audio3 = new Audio("assets/Correct.mp3");
+const audio4 = new Audio("assets/lose.mp3");
+
+// State
 let subject = "";
 let score = 0;
 let index = 0;
@@ -177,8 +184,10 @@ const handleClick = (e, correctOption) => {
     selected.classList.add("win");
     score++;
     scoreContainer.innerHTML = `<strong>Score:</strong> ${score}/5`;
+    audio3.play();
   } else {
     selected.classList.add("lose");
+    audio1.play();
   }
 
   document.querySelectorAll(".answer").forEach((answer) => {
@@ -202,11 +211,12 @@ nextBtn.addEventListener("click", () => {
     resultContainer.classList.add("show");
     finalScore.textContent = score;
 
-    // Style result as win or lose
     if (score > 1) {
       result.classList.add("win");
+      audio2.play();
     } else {
       result.classList.add("lose");
+      audio4.play();
     }
 
     return;
@@ -215,7 +225,6 @@ nextBtn.addEventListener("click", () => {
   getQuestions();
 });
 
-// Restart quiz
 restartBtn.addEventListener("click", () => {
   score = 0;
   index = 0;
@@ -225,9 +234,9 @@ restartBtn.addEventListener("click", () => {
   nextBtn.textContent = "Next question";
   result.classList.remove("win", "lose");
   getQuestions();
+  audio2.play(); // replay win tone for restart motivation
 });
 
-// Quit to subject selection
 quitBtns.forEach((btn) =>
   btn.addEventListener("click", () => {
     score = 0;
@@ -240,6 +249,7 @@ quitBtns.forEach((btn) =>
     result.classList.remove("win", "lose");
     modelContainer.style.display = "none";
     modelContainer.innerHTML = "";
+    audio1.play(); // quit = lose sound
   })
 );
 
