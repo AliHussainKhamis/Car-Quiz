@@ -1,0 +1,30 @@
+:root {
+  --main-color: #003049;
+  --light-color: #f7f6f4;
+  --red: #dc565f;
+  --green: #e9a551;
+  --max-width: 500px;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Lucida Sans', sans-serif;
+  background: url('../assets/CAR Quiz -mp.png') no-repeat center center fixed;
+  background-size: cover;
+  color: var(--light-color);
+  overflow-x: hidden;
+}
+
+.quiz-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  padding: 30px;
+  flex-wrap: wrap;
+}
+
+.quiz-container {
+  max-width: var(--max-width);
+}
