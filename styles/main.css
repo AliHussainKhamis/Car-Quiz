@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
+
 :root {
   --main-color: #003049;
   --light-color: #f7f6f4;
@@ -16,6 +18,7 @@ body {
   overflow-x: hidden;
 }
 
+/* Container Layout */
 .quiz-section {
   display: flex;
   justify-content: center;
@@ -25,6 +28,166 @@ body {
   flex-wrap: wrap;
 }
 
+/* Quiz Area */
 .quiz-container {
   max-width: var(--max-width);
+}
+
+/* Title */
+h1 {
+  text-align: center;
+  font-weight: 600;
+  font-size: 2rem;
+  margin-bottom: 0;
+  color: #ffffff;
+}
+
+ul {
+  padding: 0;
+  list-style: none;
+}
+
+p {
+  text-align: center;
+}
+
+/* Subject Selection */
+.subjects-container {
+  display: none;
+}
+.subjects {
+  margin-top: 40px;
+}
+.subject {
+  border: 2px solid var(--light-color);
+  border-radius: 10px;
+  padding: 10px 25px;
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 400;
+}
+
+/* Questions */
+.questions-container {
+  display: none;
+}
+.question-header {
+  display: flex;
+  justify-content: space-between;
+}
+.question-header p {
+  font-weight: 300;
+  text-align: start;
+}
+.answer {
+  border: 2px solid var(--light-color);
+  border-radius: 10px;
+  padding: 10px 25px;
+  margin: 20px 0;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+/* Buttons */
+.btns {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btns h5,
+.btns button {
+  padding: 10px 15px;
+  border-radius: 8px;
+  border: 2px solid var(--light-color);
+  background-color: #000c0c;
+  color: var(--light-color);
+  font-size: 0.95rem;
+  min-width: 100px;
+  box-shadow: 0 0 25px #000c0c;
+  cursor: pointer;
+}
+
+.next-btn {
+  display: none;
+}
+
+/* Result */
+.result-container {
+  display: none;
+  margin-top: 70px;
+}
+.result {
+  height: 200px;
+  width: 200px;
+  border-radius: 50%;
+  border: 4px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.final-score {
+  color: var(--green);
+  font-size: 6rem;
+}
+.result-container > p {
+  margin: 30px 0;
+}
+.result-container .btns {
+  justify-content: center;
+}
+
+/* Classes */
+.show {
+  display: block;
+}
+.win {
+  border-color: var(--green);
+  color: var(--green);
+}
+.win .final-score {
+  color: var(--green);
+}
+.lose {
+  border-color: var(--red);
+  color: var(--red);
+}
+.lose .final-score {
+  color: var(--red);
+}
+
+/* 3D Model Viewer */
+.model-container {
+  width: 500px;
+  height: 400px;
+  background-color: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--light-color);
+  border-radius: 15px;
+  display: none;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Hover Effects */
+@media (hover: hover) {
+  .subject:hover,
+  .answer:not(.win, .lose):hover {
+    background-color: var(--light-color);
+    color: var(--main-color);
+    transition: 0.3s ease-in-out;
+  }
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .quiz-section {
+    flex-direction: column;
+    align-items: center;
+  }
+  .model-container {
+    width: 100%;
+    height: 350px;
+  }
 }
