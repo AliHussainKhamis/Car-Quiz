@@ -75,6 +75,17 @@ const quizData = [
 const subjectsList = document.querySelector(".subjects");
 const subjectsContainer = document.querySelector(".subjects-container");
 const modelContainer = document.getElementById("modelContainer");
+const questionsContainer = document.querySelector(".questions-container");
+const questionContainer = document.querySelector(".question");
+const optionsContainer = document.querySelector(".answers");
+const scoreContainer = document.querySelector(".score");
+const nextBtn = document.querySelector(".next-btn");
+
+// State
+let subject = "";
+let score = 0;
+let index = 0;
+let acceptingAnswers = true;
 
 // Populate subject buttons
 const getSubjects = () => {
@@ -92,9 +103,10 @@ const getSubjects = () => {
   subjectItems.forEach((item) => {
     item.addEventListener("click", (e) => {
       const selectedSubject = e.currentTarget.id;
-
-      // Hide subject selection
+      subject = selectedSubject;
       subjectsContainer.classList.remove("show");
+      questionsContainer.classList.add("show");
+      getQuestions();
 
       // Show relevant 3D model
       if (selectedSubject.includes("power train")) {
@@ -132,6 +144,25 @@ const getSubjects = () => {
         modelContainer.innerHTML = "";
       }
     });
+  });
+};
+
+// Load and render question
+const getQuestions = () => {
+  scoreContainer.innerHTML = `<strong>Score:</strong> ${score}/5`;
+
+  const subjectData = quizData.find((data) => data.subject.toLowerCase() === subject);
+  const { questions } = subjectData;
+  const { question, options, correctOption } = questions[index];
+
+  questionContainer.innerHTML = `<strong>Question:</strong> ${question}`;
+
+  optionsContainer.innerHTML = options
+    .map((option) => `<li class="answer">${option}</li>`)
+    .join("");
+
+  document.querySelectorAll(".answer").forEach((answer) => {
+    answer.addEventListener("click", (e) => handleClick(e, correctOption));
   });
 };
 
